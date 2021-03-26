@@ -1,49 +1,63 @@
 const pool = require('../database');
 
-
 class OperationsCtrl {
 	constructor() {
-
+		
 	};
 	/* GET operations list */
- 	async getOperations(req, res) {
-	 	const operations = await pool.query('SELECT * FROM operation',(error, results, fields) => { 
-	 		console.log(results);
-	 	});
-	 	console.log('This is the operation',operations);
-		res.json(operations);
+ 	async getOperations(req, res, next) {
+ 		const operations = await pool.then(poolCon => {
+ 			return poolCon.query('SELECT * FROM operation');
+ 		});
+ 		if(operations.length > 0) {
+			res.json(operations);
+ 		} else {
+ 			res.json({message: 'Could not fetch operations'});
+ 		}
 	};
 	/* POST operation  */
-	async createOperation(req, res) {
-		console.log('CREATE Operations');
-		const newOperation = await pool.query('INSERT INTO operation set ?',[req.body]);
+	async createOperation(req, res, next) {
+		const newOperation = await pool.then( poolCon => {
+			return poolCon.query('INSERT INTO operation set ?',[req.body]);
+		});
+		if( newOperation.affectedRows != 0) {
+			console.log('Created: ',newOperation);
+		}
 		res.json({message: 'Operation created'});
 	};
 	/* GET one Operation */
-	async getOperation(req, res) {
-		console.log('GET ONE Operation');
+	async getOperation(req, res, next) {
 		const { id } = req.params;
-		const operation = await pool.query('SELECT * FROM operation WHERE id = ?',[id]);
-		console.log(games.length);
-		if(games.length > 0) {
+		const operation = await pool.then( poolCon => {
+			return poolCon.query('SELECT * FROM operation WHERE id = ?',[id]);
+		});
+		if(operation.length > 0) {
 			res.json(operation);
 		} else {
 			res.status(404).json({ text: 'Operation does not exists' });
 		}
 	};
 	/* UPDATE one Operation */
-	async updateOperation(req, res) {
-		console.log('UPDATE Operation');
+	async updateOperation(req, res, next) {
 		const { id } = req.params;
 		const oldOperation = req.body;
-		await pool.query('UPDATE operation set ? WHERE	id = ?',[oldOperation, id]);
+		const result = await pool.then( poolCon => {
+			return query('UPDATE operation set ? WHERE	id = ?',[oldOperation, id]);
+		});
+		if(result) {
+			console.log('Query finished',result);
+		}
 		res.json({ message:'Operation Updated' });
 	};
 	/* GET operations list */
-	async deleteOperation(req, res) {
-		console.log('DELETE Operation');
+	async deleteOperation(req, res, next) {
 		const { id } = req.params;
-		await pool.query('DELETE FROM operation WHERE id = ?',[id]);
+		const result = await pool.then( poolCon => {
+			return query('DELETE FROM operation WHERE id = ?',[id]);
+		});
+		if(result) {
+			console.log('Query finished', result);
+		}
 		res.json({ message:'Operation Deleted' });
 	};
 }
