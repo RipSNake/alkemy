@@ -18,7 +18,7 @@ pool.then(connection => {
 
         connection.on('release', () => {console.log('Connection Released')});
 
-        console.log('DB is Connected');
+        console.log('Pool Promise Created');
     });
 
 module.exports = pool;
