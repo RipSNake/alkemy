@@ -1,0 +1,51 @@
+<div class="container-fluid">
+	<!-- Display Operation Form-->
+	<div class="col-12 col-sm-6 mx-auto">
+		<div class="card">
+			<div class="card-header text-center">
+				<h5>Operation</h5>
+			</div>
+			<div class="card-body">
+				
+				<form #operationForm="ngForm" (ngSubmit)="createOperation(operationForm)">
+					<div class="form-group row"><!-- This is gonna be a hidden element -->
+						<input type="hidden" name="id" [(ngModel)]="operation.id">
+						<input type="hidden" name="user_id" [(ngModel)]="operation.user_id">
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label" for="concept">Concept</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="concept" placeholder="concept" [(ngModel)]="operation.concept">
+						</div>
+					</div>	
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label" for="amount">Amount</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="number" name="amount" min="0.0" step="0.1" [(ngModel)]="operation.amount">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label" for="type">Operation Type</label>
+						<div class="col-sm-8">
+							<select class="form-select" name="type" id="type" [(ngModel)]="operation.type">
+								<option value="income">Income</option>
+								<option value="outcome">Outcome</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row" *ngIf="operation.id == null">
+						<label class="col-sm-4 col-form-label" for="modified">Modified</label>
+						<div class="col-sm-8">
+							<input type="hidden" name="modified" [(ngModel)]="operation.modified" placeholder="Last Modification">
+						</div>
+					</div>
+					<div class="form-group row justify-content-evenly mt-3">
+						<button type="submit" *ngIf="!getEditable()" class="col-2 btn btn-lg btn-outline-primary bi-plus-square" title="Save Operation"></button>
+						<button type="submit" *ngIf="getEditable()" class="col-2 btn btn-lg btn-outline-primary bi-save" title="Update Operation"></button>
+						<button type="button" (click)="getBack()" class="col-2 btn btn-lg btn-danger bi-x-square" title="Delete Operation"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

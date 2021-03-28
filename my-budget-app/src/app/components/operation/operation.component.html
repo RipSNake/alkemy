@@ -1,0 +1,32 @@
+<!-- Display the Operations List -->
+	<div class="col-12 col-sm-11 col-md-10 mx-auto">
+		<table class="table table-bordered text-center">
+			<caption>Operations</caption>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Concept</th>
+					<th>Amount</th>
+					<th class="d-none d-sm-table-cell">Type</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let operation of operationService.operations" [ngStyle]="{'background-color': operation.type == 'outcome' ? '#ff2020' : '#30c330cc'}">
+					<td *ngIf="operation.created_at != undefined">{{ operation.created_at.substring(0,10) }}</td>
+					<td>{{ operation.concept }}</td>
+					<td>{{ operation.amount }}</td>
+					<td class="d-none d-sm-table-cell">{{ operation.type }}</td>
+					<td class="d-flex justify-content-evenly" [ngStyle]="{'background-color': 'rgba(255,255,255,1)'}">
+						<button class="btn btn-primary btn-sm" routerLink="/operations/{{ operation.id }}" [queryParams]="{edit: true}" title="EDIT">
+							<i class="bi-pencil"></i>
+						</button>
+						<button class="btn btn-danger btn-sm" (click)="deleteOperation(operation.id!)" title="DELETE"> <!-- pasamos el parámetro del id del empleado que esta seleccionado -->
+							<i class="bi-trash"></i>
+						</button>
+					</td> <!-- Edit, delete -->
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
