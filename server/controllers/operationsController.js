@@ -27,7 +27,7 @@ class OperationsCtrl {
 	};
 	/* GET one Operation */
 	async getOperation(req, res, next) {
-		const { id } = req.params;
+		const id = req.params.id;
 		const operation = await pool.then( poolCon => {
 			return poolCon.query('SELECT * FROM operation WHERE id = ?',[id]);
 		});
@@ -39,10 +39,10 @@ class OperationsCtrl {
 	};
 	/* UPDATE one Operation */
 	async updateOperation(req, res, next) {
-		const { id } = req.params;
 		const oldOperation = req.body;
+		console.log(req.body);
 		const result = await pool.then( poolCon => {
-			return query('UPDATE operation set ? WHERE	id = ?',[oldOperation, id]);
+			return poolCon.query('UPDATE operation set ? WHERE	id = ?',[oldOperation, req.params.id]);
 		});
 		if(result) {
 			console.log('Query finished',result);
@@ -53,7 +53,7 @@ class OperationsCtrl {
 	async deleteOperation(req, res, next) {
 		const { id } = req.params;
 		const result = await pool.then( poolCon => {
-			return query('DELETE FROM operation WHERE id = ?',[id]);
+			return poolCon.query('DELETE FROM operation WHERE id = ?',[id]);
 		});
 		if(result) {
 			console.log('Query finished', result);
